@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}Agenda médica{% endblock %}
+{% block contenido %}
+<h1>Agenda médica</h1>
+{% if "paciente" in roles or "recepcionista" in roles %}
+  <a class="boton" href="{% url 'consultas:agendar_cita' %}">Agendar cita</a>
+{% endif %}
+{% if "paciente" in roles %}<a class="enlace" href="{% url 'consultas:historial' %}">Mi historial</a>{% endif %}
+{% if "recepcionista" in roles %}<a class="enlace" href="{% url 'consultas:registrar-paciente' %}">Registrar paciente</a>{% endif %}
+{% for cita in citas %}
+  <article class="tarjeta">
+    <h2>{{ cita.inicio|date:"d/m/Y H:i" }} · {{ cita.get_estado_display }}</h2>
+    <p>{{ cita.paciente }} · {{ cita.medico }}</p>
+    {% if cita.estado == "pendiente" and "admin" not in roles %}
+      <form method="post" action="{% url 'consultas:cancelar' cita.pk %}">
+        {% csrf_token %}<button class="enlace">Cancelar cita</button>
+      </form>
+    {% endif %}
+    {% if "medico" in roles and cita.medico.usuario_id == user.pk %}
+      {% if cita.estado != "cancelada" and not cita.consulta %}
+        <a class="enlace" href="{% url 'consultas:registrar-consulta' cita.pk %}">Registrar consulta</a>
+      {% endif %}
+      <a class="enlace" href="{% url 'consultas:historial-paciente' cita.paciente_id %}">Ver historial</a>
+    {% endif %}
+  </article>
+{% empty %}
+  <p>Todavía no hay citas en tu agenda.</p>
+{% endfor %}
+{% endblock %}

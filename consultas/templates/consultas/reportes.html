@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block titulo %}Reportes de consultas{% endblock %}
+{% block contenido %}
+<h1>Reportes de consultas</h1>
+<section class="tarjeta">
+  <h2>Citas por especialidad</h2>
+  <ul>{% for fila in especialidades %}<li>{{ fila.medico__especialidad }} · {{ fila.total }}</li>{% empty %}<li>Sin citas registradas.</li>{% endfor %}</ul>
+</section>
+<section class="tarjeta">
+  <h2>Médicos con más consultas</h2>
+  <ul>{% for fila in medicos %}<li>{{ fila.medico__usuario__first_name }} {{ fila.medico__usuario__last_name }} · {{ fila.total }}</li>{% empty %}<li>Sin consultas registradas.</li>{% endfor %}</ul>
+</section>
+<section class="tarjeta">
+  <h2>Pacientes frecuentes</h2>
+  <ul>{% for fila in pacientes %}<li>{{ fila.paciente__nombres }} {{ fila.paciente__apellidos }} · {{ fila.total }}</li>{% empty %}<li>Sin citas registradas.</li>{% endfor %}</ul>
+</section>
+{% endblock %}

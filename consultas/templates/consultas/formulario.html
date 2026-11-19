@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block contenido %}
+<section class="tarjeta">
+  <h1>{{ titulo }}</h1>
+  {% if filtrar %}
+    <form method="get">
+      <label for="especialidad">Especialidad</label>
+      <input id="especialidad" name="especialidad" value="{{ especialidad }}">
+      <button class="enlace">Filtrar médicos</button>
+    </form>
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_div }}
+    <button class="boton">Guardar</button>
+    <a class="enlace" href="{% url 'consultas:agenda' %}">Volver a la agenda</a>
+  </form>
+</section>
+{% endblock %}

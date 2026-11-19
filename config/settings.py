@@ -89,3 +89,21 @@ LOGGING = {
     "handlers": {"consola": {"class": "logging.StreamHandler"}},
     "loggers": {"cuentas.auditoria": {"handlers": ["consola"], "level": "INFO", "propagate": False}},
 }
+
+INSTALLED_APPS.append("consultas")
+AVISOS_INGRESO = os.getenv("DJANGO_AVISOS_INGRESO", "consultas.avisos.avisos_ingreso")
+PERMISOS_GRUPOS = {
+    "admin": (
+        "consultas.cita.view_cita", "consultas.cita.change_cita", "consultas.cita.generar_reportes",
+        "consultas.medico.view_medico", "consultas.medico.add_medico", "consultas.medico.change_medico",
+        "consultas.horariomedico.view_horariomedico", "consultas.horariomedico.add_horariomedico",
+        "consultas.horariomedico.change_horariomedico", "consultas.horariomedico.delete_horariomedico",
+        "consultas.paciente.view_paciente", "consultas.paciente.change_paciente",
+    ),
+    "medico": ("consultas.cita.cancelar_cita", "consultas.consulta.ver_historial_clinico"),
+    "recepcionista": ("consultas.cita.agendar_cita", "consultas.cita.cancelar_cita"),
+    "paciente": (
+        "consultas.cita.agendar_cita", "consultas.cita.cancelar_cita",
+        "consultas.consulta.ver_historial_clinico",
+    ),
+}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}Historial clínico{% endblock %}
+{% block contenido %}
+<h1>Historial de {{ paciente }}</h1>
+{% if paciente.alergias %}<p>Alergias registradas: {{ paciente.alergias }}</p>{% endif %}
+{% for consulta in consultas %}
+  <article class="tarjeta">
+    <h2>{{ consulta.cita.inicio|date:"d/m/Y H:i" }} · {{ consulta.cita.medico }}</h2>
+    <dl>
+      <dt>Diagnóstico</dt><dd>{{ consulta.diagnostico|linebreaksbr }}</dd>
+      <dt>Tratamiento</dt><dd>{{ consulta.tratamiento|linebreaksbr }}</dd>
+      {% if consulta.medicamentos %}<dt>Medicamentos</dt><dd>{{ consulta.medicamentos|linebreaksbr }}</dd>{% endif %}
+      {% if consulta.fecha_control %}<dt>Control</dt><dd>{{ consulta.fecha_control|date:"d/m/Y" }}</dd>{% endif %}
+      {% if consulta.adjuntos_simulados %}<dt>Referencias</dt><dd>{{ consulta.adjuntos_simulados|linebreaksbr }}</dd>{% endif %}
+    </dl>
+    {% for nota in consulta.notas.all %}
+      <p><strong>{{ nota.registrada_en|date:"d/m/Y H:i" }}</strong> {{ nota.texto|linebreaksbr }}</p>
+    {% endfor %}
+    {% if consulta.cita.medico.usuario_id == user.pk %}
+      <a href="{% url 'consultas:agregar-nota' consulta.pk %}">Agregar nota</a>
+    {% endif %}
+  </article>
+{% empty %}
+  <p>Todavía no hay consultas registradas.</p>
+{% endfor %}
+{% endblock %}
